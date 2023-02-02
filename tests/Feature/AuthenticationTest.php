@@ -1,10 +1,11 @@
 <?php
 
 namespace Tests\Feature;
-
+use App\models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
 class AuthenticationTest extends TestCase
 {
@@ -22,7 +23,7 @@ class AuthenticationTest extends TestCase
 
         $this->postJson(route('auth.login'), $data)
              ->assertOk()
-             ->assertJsonFragmen(['acces.token', 'user']);
+             ->assertJsonStructure(['access_token', 'user']);
 
     }
 
@@ -66,8 +67,10 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->createOne();
 
-        Sanctum::acitngAs($user);
+        Sanctum::actingAs($user);
 
         $this->getJson(route('auth.logout'))->assertOk();   
     }
+
+
 }
